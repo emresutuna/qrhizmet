@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#071923" />
+  <link rel="canonical" href="https://qrhizmet.site/fiyatlar.html" />
+  <meta name="description" content="QRHizmeti QR sayfa fiyatları. Restoran, kuaför, oto yıkama ve yerel işletmeler için paketleri inceleyin." />
+  <meta name="robots" content="index,follow" />
+  <meta property="og:title" content="QR Sayfa Paketleri ve Fiyatları | QRHizmeti" />
+  <meta property="og:description" content="İşletmenize uygun QR sayfa paketini seçin. Başlangıç ₺249/ay'dan." />
+  <meta property="og:type" content="website" />
+  <title>QRHizmeti | QR Sayfa Paketleri ve Fiyatları</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config={theme:{extend:{colors:{ink:'#071923',teal:'#19C6B4',paper:'#F5F8F6',muted:'#73838A'}}}}</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>*{box-sizing:border-box}body{font-family:Manrope,system-ui,sans-serif}.glass{background:#071923e8;backdrop-filter:blur(16px)}.plan{transition:transform .2s,box-shadow .2s}.plan:hover{transform:translateY(-5px);box-shadow:0 24px 54px #07192318}.annual .price-monthly{display:none}.price-yearly{display:none}.annual .price-yearly{display:block}.annual .monthly-note{display:none}.annual .yearly-note{display:block}.yearly-note{display:none}</style>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Product","name":"QRHizmeti QR sayfa hizmeti","description":"Restoran, kuaför, oto yıkama ve yerel işletmeler için yönetilebilir QR sayfa paketleri.","brand":{"@type":"Brand","name":"QRHizmeti"},"offers":{"@type":"AggregateOffer","priceCurrency":"TRY","lowPrice":"249","highPrice":"899","offerCount":"3"}}</script>
+</head>
+<body class="bg-paper text-ink antialiased">
+  <header class="glass sticky top-0 z-30 border-b border-white/10 text-white">
+    <nav class="mx-auto flex h-[72px] max-w-7xl items-center justify-between px-5 lg:px-8" aria-label="Ana menü">
+      <a href="index.html" class="flex items-center gap-2.5 text-lg font-extrabold"> <span class="grid h-9 w-9 place-items-center rounded-xl bg-teal text-ink">QR</span> QR<span class="-ml-2 text-teal">Hizmeti</span></a>
+      <div class="hidden items-center gap-7 text-sm font-semibold text-white/75 md:flex"><a class="hover:text-teal" href="index.html#cozum">Çözüm</a><a class="hover:text-teal" href="demo.html">Demoyu gör</a><a class="text-teal" href="fiyatlar.html" aria-current="page">Fiyatlar</a><a class="hover:text-teal" href="index.html#iletisim">İletişim</a></div>
+      <a href="https://wa.me/905345076159?text=Merhaba%2C%20QRHizmeti%20paketleri%20hakk%C4%B1nda%20bilgi%20almak%20istiyorum." target="_blank" rel="noopener noreferrer" class="rounded-full bg-teal px-4 py-2.5 text-xs font-extrabold text-ink sm:px-5 sm:text-sm">WhatsApp’tan sor ↗</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="relative isolate overflow-hidden bg-ink px-5 pb-20 pt-16 text-white sm:pb-24 sm:pt-20">
+      <div class="absolute -right-28 -top-36 -z-10 h-[460px] w-[460px] rounded-full bg-teal/15 blur-[100px]"></div><div class="absolute -bottom-48 left-1/4 -z-10 h-[400px] w-[400px] rounded-full bg-cyan-800/20 blur-[90px]"></div>
+      <div class="mx-auto max-w-4xl text-center"><span class="inline-flex items-center gap-2 rounded-full border border-teal/25 bg-teal/10 px-4 py-2 text-[10px] font-extrabold uppercase tracking-[.16em] text-teal sm:text-xs"><span class="h-1.5 w-1.5 rounded-full bg-teal"></span> Şeffaf ve sade fiyatlandırma</span><h1 class="mt-6 text-4xl font-extrabold tracking-tight sm:text-6xl">İşletmenize uygun<br class="hidden sm:block"/> QR sayfa paketi.</h1><p class="mx-auto mt-5 max-w-2xl text-sm leading-7 text-white/60 sm:text-base">Ürünlerinizi veya hizmetlerinizi QR sayfasında yayınlayın ve fiyatları tek yerden yönetin. İhtiyacınıza uygun paketi seçin; müşterileriniz güncel bilgilerinize QR ile ulaşsın.</p>
+        <div class="mt-8 inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/5 p-1.5" role="group" aria-label="Ödeme dönemini seçin"><button id="monthly-toggle" type="button" class="rounded-full bg-white px-5 py-2.5 text-xs font-extrabold text-ink" aria-pressed="true">Aylık</button><button id="annual-toggle" type="button" class="rounded-full px-5 py-2.5 text-xs font-extrabold text-white/70" aria-pressed="false">Yıllık <span class="ml-1 rounded-full bg-teal/15 px-2 py-1 text-[9px] text-teal">2 ay bizden</span></button></div>
+      </div>
+    </section>
+
+    <section id="plans" class="relative z-10 -mt-8 px-5 pb-20 sm:-mt-10 sm:pb-24">
+      <div id="pricing-grid" class="mx-auto grid max-w-7xl gap-5 lg:grid-cols-3">
+        <article class="plan rounded-3xl border border-ink/8 bg-white p-6 shadow-sm sm:p-8">
+          <span class="text-xs font-extrabold uppercase tracking-wider text-muted">Başlangıç</span><h2 class="mt-3 text-xl font-extrabold">Dijital menüye geçiş</h2><p class="mt-2 min-h-10 text-xs leading-5 text-muted">QR menüsünü hızlıca yayına almak isteyen tek şubeli işletmeler için.</p>
+          <div class="mt-6 flex items-end gap-1"><span class="text-sm font-bold text-muted">₺</span><strong class="price-monthly text-5xl font-extrabold tracking-tight" data-monthly="249">249</strong><strong class="price-yearly text-5xl font-extrabold tracking-tight" data-yearly="2490">2.490</strong><span class="pb-1 text-xs text-muted">/ <span class="monthly-note">ay</span><span class="yearly-note">yıl</span></span></div><p class="monthly-note mt-2 text-[10px] text-muted">Aylık ödeme</p><p class="yearly-note mt-2 text-[10px] font-bold text-teal-800">Yıllık ödeme · ayda ₺207’ye denk gelir</p>
+          <a data-plan="Başlangıç" href="https://wa.me/905345076159?text=Merhaba%2C%20QRHizmeti%20Ba%C5%9Flang%C4%B1%C3%A7%20paketi%20hakk%C4%B1nda%20bilgi%20almak%20istiyorum." target="_blank" rel="noopener noreferrer" class="mt-6 flex w-full items-center justify-center rounded-full border border-ink/15 px-5 py-3 text-sm font-extrabold transition hover:bg-paper">Paketi sor ↗</a>
+          <div class="my-6 h-px bg-ink/8"></div><p class="mb-4 text-[10px] font-extrabold uppercase tracking-wider text-muted">Pakete dahil</p><ul class="space-y-3 text-xs text-ink/75"><li>✓ 1 çevrimiçi menü ve QR kod</li><li>✓ 50 kategoriye, 80 ürüne kadar</li><li>✓ Ürün fotoğrafı, gramaj ve kalori alanları</li><li>✓ Fiyat, indirim ve alerjen bilgileri</li><li>✓ 3 farklı menü görünümü</li><li>✓ Canlı menü önizlemesi</li></ul>
+        </article>
+
+        <article class="plan relative rounded-3xl border-2 border-teal bg-white p-6 shadow-xl shadow-teal/10 sm:p-8">
+          <span class="absolute right-5 top-5 rounded-full bg-teal px-3 py-1.5 text-[9px] font-extrabold uppercase tracking-wider text-ink">En çok tercih edilen</span><span class="text-xs font-extrabold uppercase tracking-wider text-teal-800">Profesyonel</span><h2 class="mt-3 text-xl font-extrabold">Misafir deneyimini büyüt</h2><p class="mt-2 min-h-10 text-xs leading-5 text-muted">Birden fazla dil, kampanyalar ve menü etkileşimlerini görmek isteyenler için.</p>
+          <div class="mt-6 flex items-end gap-1"><span class="text-sm font-bold text-muted">₺</span><strong class="price-monthly text-5xl font-extrabold tracking-tight" data-monthly="499">499</strong><strong class="price-yearly text-5xl font-extrabold tracking-tight" data-yearly="4990">4.990</strong><span class="pb-1 text-xs text-muted">/ <span class="monthly-note">ay</span><span class="yearly-note">yıl</span></span></div><p class="monthly-note mt-2 text-[10px] text-muted">Aylık ödeme</p><p class="yearly-note mt-2 text-[10px] font-bold text-teal-800">Yıllık ödeme · ayda ₺416’ya denk gelir</p>
+          <a data-plan="Profesyonel" href="https://wa.me/905345076159?text=Merhaba%2C%20QRHizmeti%20Profesyonel%20paketi%20hakk%C4%B1nda%20bilgi%20almak%20istiyorum." target="_blank" rel="noopener noreferrer" class="mt-6 flex w-full items-center justify-center rounded-full bg-ink px-5 py-3 text-sm font-extrabold text-white transition hover:bg-teal hover:text-ink">Paketi seç ↗</a>
+          <div class="my-6 h-px bg-ink/8"></div><p class="mb-4 text-[10px] font-extrabold uppercase tracking-wider text-muted">Başlangıç paketindeki her şey, ayrıca</p><ul class="space-y-3 text-xs text-ink/75"><li>✓ 6 dile otomatik menü çevirisi</li><li>✓ Saatlik menü ve ürün analitiği</li><li>✓ Yemek, tatlı ve içecek önerileri</li><li>✓ Kampanya fotoğrafı ve otomatik carousel</li><li>✓ Kategori ve ürün etkileşim raporu</li></ul>
+        </article>
+
+        <article class="plan rounded-3xl border border-ink/8 bg-white p-6 shadow-sm sm:p-8">
+          <span class="text-xs font-extrabold uppercase tracking-wider text-muted">İşletme+</span><h2 class="mt-3 text-xl font-extrabold">Günlük işleri hızlandır</h2><p class="mt-2 min-h-10 text-xs leading-5 text-muted">Fiyat güncellemelerini WhatsApp üzerinden yönetmek isteyen ekipler için.</p>
+          <div class="mt-6 flex items-end gap-1"><span class="text-sm font-bold text-muted">₺</span><strong class="price-monthly text-5xl font-extrabold tracking-tight" data-monthly="899">899</strong><strong class="price-yearly text-5xl font-extrabold tracking-tight" data-yearly="8990">8.990</strong><span class="pb-1 text-xs text-muted">/ <span class="monthly-note">ay</span><span class="yearly-note">yıl</span></span></div><p class="monthly-note mt-2 text-[10px] text-muted">Aylık ödeme</p><p class="yearly-note mt-2 text-[10px] font-bold text-teal-800">Yıllık ödeme · ayda ₺749’ya denk gelir</p>
+          <a data-plan="İşletme+" href="https://wa.me/905345076159?text=Merhaba%2C%20QRHizmeti%20%C4%B0%C5%9Fletme%2B%20paketi%20hakk%C4%B1nda%20bilgi%20almak%20istiyorum." target="_blank" rel="noopener noreferrer" class="mt-6 flex w-full items-center justify-center rounded-full border border-ink/15 px-5 py-3 text-sm font-extrabold transition hover:bg-paper">Paketi sor ↗</a>
+          <div class="my-6 h-px bg-ink/8"></div><p class="mb-4 text-[10px] font-extrabold uppercase tracking-wider text-muted">Profesyonel paketindeki her şey, ayrıca</p><ul class="space-y-3 text-xs text-ink/75"><li>✓ WhatsApp üzerinden fiyat güncelleme</li><li>✓ Değişikliği onaylama ve geri alma</li><li>✓ WhatsApp bağlantı kurulumu desteği</li><li>✓ Menüye özel başlangıç kurulumu</li><li>✓ Öncelikli destek kanalı</li></ul>
+        </article>
+      </div>
+      <p class="mx-auto mt-6 max-w-3xl text-center text-[10px] leading-5 text-muted">Gösterilen tutarlar önerilen lansman paket fiyatlarıdır. WhatsApp ve otomatik çeviri özellikleri ilgili servis kurulumunu gerektirir. KDV ve ödeme koşulları teklif sırasında netleştirilir.</p>
+    </section>
+
+    <section class="bg-white px-5 py-20 sm:py-24"><div class="mx-auto max-w-5xl"><div class="text-center"><span class="text-xs font-extrabold uppercase tracking-[.16em] text-teal-800">KARAR VERMEK KOLAY OLSUN</span><h2 class="mt-3 text-3xl font-extrabold tracking-tight sm:text-4xl">Sık sorulanlar</h2></div><div class="mt-10 grid gap-4 md:grid-cols-2"><details class="rounded-2xl border border-ink/8 bg-paper p-5"><summary class="cursor-pointer text-sm font-extrabold">Paketleri nasıl satın alabilirim?</summary><p class="mt-3 text-xs leading-6 text-muted">WhatsApp’tan bize yazın; ihtiyacınızı netleştirip paket ve ödeme detaylarını birlikte belirleyelim.</p></details><details class="rounded-2xl border border-ink/8 bg-paper p-5"><summary class="cursor-pointer text-sm font-extrabold">Menü fiyatını değiştirdiğimde QR kod değişir mi?</summary><p class="mt-3 text-xs leading-6 text-muted">Hayır. Menü içeriği güncellenir, basılı QR kodunuz aynı bağlantıyı açmaya devam eder.</p></details><details class="rounded-2xl border border-ink/8 bg-paper p-5"><summary class="cursor-pointer text-sm font-extrabold">Otomatik çeviri her dilde çalışır mı?</summary><p class="mt-3 text-xs leading-6 text-muted">Panelde İngilizce, Almanca, Arapça, Rusça, Fransızca ve İspanyolca seçenekleri bulunur. Özellik için çeviri servis bağlantısı gerekir.</p></details><details class="rounded-2xl border border-ink/8 bg-paper p-5"><summary class="cursor-pointer text-sm font-extrabold">WhatsApp fiyat güncellemesi nasıl işler?</summary><p class="mt-3 text-xs leading-6 text-muted">Yetkili numaradan ürün ve yeni fiyat gönderilir. Menüye uygulanmadan önce size onay önizlemesi gelir. Özellik WhatsApp Cloud API kurulumu gerektirir.</p></details></div></div></section>
+
+    <section class="px-5 py-16 sm:py-20"><div class="mx-auto flex max-w-6xl flex-col items-start justify-between gap-6 rounded-[2rem] bg-ink p-7 text-white sm:flex-row sm:items-center sm:p-10"><div><span class="text-[10px] font-extrabold uppercase tracking-[.16em] text-teal">İŞLETMENİZE UYGUN PAKETİ BULALIM</span><h2 class="mt-2 text-2xl font-extrabold sm:text-3xl">Aklınızda soru mu var?</h2><p class="mt-2 max-w-xl text-xs leading-6 text-white/60">Bize işletmenizden ve ihtiyaçlarınızdan bahsedin. Birlikte doğru başlangıç noktasını seçelim.</p></div><a class="shrink-0 rounded-full bg-teal px-6 py-3.5 text-sm font-extrabold text-ink transition hover:-translate-y-0.5" href="https://wa.me/905345076159?text=Merhaba%2C%20QRHizmeti%20fiyatland%C4%B1rma%20paketleri%20hakk%C4%B1nda%20konu%C5%9Fmak%20istiyorum." target="_blank" rel="noopener noreferrer">WhatsApp’tan yaz ↗</a></div></section>
+  </main>
+  <footer class="bg-[#041219] px-5 py-7 text-white/55"><div class="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 text-xs sm:flex-row"><a href="index.html" class="text-base font-extrabold text-white">QR<span class="text-teal">Hizmeti</span></a><p>© 2026 QRHizmeti. İşletmenizin QR vitrini, cebinizde.</p><div class="flex gap-5"><a class="hover:text-white" href="index.html#iletisim">İletişim</a><a class="hover:text-white" href="demo.html">Demo</a></div></div></footer>
+  <script>
+    const monthly=document.getElementById('monthly-toggle'),annual=document.getElementById('annual-toggle'),grid=document.getElementById('pricing-grid');
+    function setBilling(isAnnual){grid.classList.toggle('annual',isAnnual);monthly.className='rounded-full px-5 py-2.5 text-xs font-extrabold '+(isAnnual?'text-white/70':'bg-white text-ink');annual.className='rounded-full px-5 py-2.5 text-xs font-extrabold '+(isAnnual?'bg-white text-ink':'text-white/70');monthly.setAttribute('aria-pressed',String(!isAnnual));annual.setAttribute('aria-pressed',String(isAnnual));}
+    monthly.addEventListener('click',()=>setBilling(false));annual.addEventListener('click',()=>setBilling(true));
+  </script>
+</body>
+</html>
