@@ -13,17 +13,34 @@ function authorized(record, token) {
   return supplied.length === expected.length && timingSafeEqual(supplied, expected);
 }
 
-export default async (request) => {
-  if (request.method !== "POST") return reply({ error: "POST gerekli." }, 405);
-  const apiKey = process.env.GOOGLE_TRANSLATE_API_KEY;
-  if (!apiKey) return reply({ error: "Otomatik çeviri henüz etkin değil. Netlify ayarlarına GOOGLE_TRANSLATE_API_KEY ekle." }, 503);
+export default async (request, context) => {
+  if (request.method !== "POST" && request.method !== "GET") return reply({ error: "GET veya POST gerekli." }, 405);
   try {
-    const { id, language } = await request.json();
+    const url = new URL(request.url);
+    const input = request.method === "GET" ? Object.fromEntries(url.searchParams) : await request.json();
+    const { id, language } = input;
     if (!/^[a-f0-9]{18}$/.test(id || "") || !languages.has(language)) return reply({ error: "Menü veya hedef dil geçersiz." }, 400);
     const store = getStore({ name: "masaqr-menus", region: "eu-central-1" });
     const record = await store.get(`menus/${id}`, { type: "json" });
-    const user = await getUser();
-    if (!user || (record?.accountId ? record.accountId !== user.id : !authorized(record, request.headers.get("x-owner-token")))) return reply({ error: "Bu menüyü çevirme yetkin yok." }, user ? 403 : 401);
+    if (!record?.data) return reply({ error: "Menü bulunamadı." }, 404);
+    if (request.method === "GET" && record.status && record.status !== "approved") return reply({ error: "Menü onaylandıktan sonra çevirilebilir." }, 403);
+    if (request.method === "POST") {
+      const user = await getUser();
+      if (!user || (record.accountId ? record.accountId !== user.id : !authorized(record, request.headers.get("x-owner-token")))) return reply({ error: "Bu menüyü çevirme yetkin yok." }, user ? 403 : 401);
+    }
+    if (record.translations?.[language]) return reply({ language, translation: record.translations[language], cached: true });
+
+    if (request.method === "GET") {
+      const ip = context?.ip || request.headers.get("x-nf-client-connection-ip") || "unknown";
+      const window = Math.floor(Date.now() / 900_000);
+      const limits = getStore({ name: "masaqr-translate-limits", region: "eu-central-1" });
+      const key = `public/${hash(ip)}/${window}`;
+      const limit = await limits.get(key, { type: "json" });
+      if ((limit?.count || 0) >= 8) return reply({ error: "Çok hızlı çeviri isteği geldi. Birkaç dakika sonra tekrar dene." }, 429);
+      await limits.setJSON(key, { count: (limit?.count || 0) + 1, window });
+    }
+    const apiKey = process.env.GOOGLE_TRANSLATE_API_KEY;
+    if (!apiKey) return reply({ error: "Otomatik çeviri servisi henüz etkin değil. Site yöneticisinin Netlify'a GOOGLE_TRANSLATE_API_KEY eklemesi gerekiyor." }, 503);
 
     const data = record.data;
     const entries = [];

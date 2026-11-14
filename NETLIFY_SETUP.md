@@ -25,9 +25,9 @@ Google Cloud projesinde Cloud Translation API'yi etkinleştir, bir API anahtarı
 
 | Değişken | Değer |
 | --- | --- |
-| `GOOGLE_TRANSLATE_API_KEY` | Google Cloud Translation API key |
+| `GOOGLE_TRANSLATE_API_KEY` | Google Cloud Translation API key; required for automatic translations when a guest selects English, Arabic, German, or French. |
 
-Netlify'da değişkeni ekledikten sonra yeni deploy başlat. Panelde hedef dilleri seçip **Seçili dillere çevir** düğmesine bas. Çeviriler Google'ın ücretli servisini kullanabilir. Çeviri anahtarı yalnızca Function tarafında kalır.
+Netlify'da değişkeni ekledikten sonra yeni deploy başlat. Misafir QR menüsünde İngilizce, Arapça, Almanca veya Fransızca seçtiğinde çeviri otomatik üretilip kaydedilir. İstersen işletme panelindeki çeviri alanından dilleri önceden hazırlayabilirsin. Google Cloud Translation kullanımı ücretlidir; anahtar yalnızca Function tarafında kalır.
 
 ## WhatsApp fiyat güncelleme
 
