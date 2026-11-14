@@ -52,6 +52,7 @@ export default async (request) => {
         menus.list({ prefix: "menus/" }),
       ]);
       const accountMap = new Map();
+      accountMap.set(admin.id, { accountId: admin.id, email: admin.email || "", createdAt: "", lastSeenAt: new Date().toISOString() });
       for (const blob of accountList.blobs) {
         const account = await accountStore().get(blob.key, { type: "json" });
         if (account?.accountId) accountMap.set(account.accountId, account);
@@ -63,7 +64,7 @@ export default async (request) => {
         const id = blob.key.slice("menus/".length);
         const summary = menuSummary(id, record);
         const account = accountMap.get(record.accountId);
-        summary.email ||= account?.email || "";
+        summary.email ||= account?.email || (record.accountId === admin.id ? admin.email || "" : "");
         summary.accountCreatedAt = account?.createdAt || "";
         summary.lastSeenAt = account?.lastSeenAt || "";
         menuRows.push(summary);
