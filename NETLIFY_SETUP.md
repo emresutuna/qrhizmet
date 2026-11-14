@@ -9,6 +9,12 @@
 
 Menüler `@netlify/blobs` üzerinde tutulur; deploy sırasında dosya sistemine yazılmaz ve yeni deploylarda kalır. İşletme hesabı Netlify Identity ile açılır; menü hesabın kimliğine bağlandığı için başka cihazdan giriş yapınca da yüklenir. Ödeme adımı yoktur.
 
+## Yönetici paneli ve QR onayı
+
+`yonetici.html` yönetici panelidir. Netlify Identity ile giriş yapıldıktan sonra API, e-posta adresini `ADMIN_EMAILS` ortam değişkenindeki virgülle ayrılmış yönetici listesiyle karşılaştırır. Netlify → Site configuration → Environment variables bölümüne `ADMIN_EMAILS` ekleyip yönetici e-posta adreslerini gir; değişkeni güncelledikten sonra deploy et. Kodda mevcut yönetici hesabı için geçici varsayılan `emre.sutuna1998@gmail.com` bulunur.
+
+Yeni menüler onay beklerken QR görseli üretilebilir ancak public menü verisi gösterilmez. Yönetici panelinden **Onayla ve QR'ı aktifleştir** seçilince aynı QR bağlantısı açılır. **Düzenleme iste** seçeneği işletme panelinde nedeni gösterir; işletme tekrar gönderince menü yeniden onay kuyruğuna gelir. Mevcut, durumu kaydedilmemiş menüler eski bağlantılarını korumak için aktif kabul edilir.
+
 ## İşletme üyeliği
 
 `hesap.html` kayıt ve giriş ekranıdır. Şifreyi bu uygulama saklamaz; Netlify Identity kayıt, oturum ve parola yenileme işlemlerini yönetir. `@netlify/identity` Functions tarafında hesabı doğrular; `menus` fonksiyonu menü düzenleme, oluşturma ve listelemeyi hesap sahibiyle sınırlar. QR menülerinin herkese açık GET adresi müşterilerin kullanımı için açık kalır. Eski, hesapsız menü aynı tarayıcıdaki düzenleme anahtarıyla ilk güncellemede hesaba bağlanabilir.
@@ -45,7 +51,7 @@ WhatsApp yanıtları Meta'nın mesajlaşma penceresi ve hesap kurallarına tabid
 
 ## Arama motorları
 
-Ana sayfada sayfa başlığı, açıklama, Open Graph etiketleri ve yapılandırılmış yazılım bilgisi bulunur. `/robots.txt` tüm herkese açık sayfaların taranmasına izin verir; `/sitemap.xml` ana sayfa, demo ve yayımlanmış QR menülerini listeler. Panel `noindex` olarak işaretlenmiştir. Her menü, örneğin `/menu.html?menu=<menü-id>` adresinden taranabilir.
+Ana sayfada sayfa başlığı, açıklama, Open Graph etiketleri ve yapılandırılmış yazılım bilgisi bulunur. `/robots.txt` tüm herkese açık sayfaların taranmasına izin verir; `/sitemap.xml` ana sayfa, demo ve yayımlanmış QR menülerini listeler. İşletme ve yönetici panelleri `noindex` olarak işaretlenmiştir. Onaylanmış her menü, örneğin `/menu.html?menu=<menü-id>` adresinden taranabilir.
 
 `qrhizmet.site` Google Search Console'a alan adı mülkü olarak ekle, DNS doğrulamasını tamamla ve `https://qrhizmet.site/sitemap.xml` adresini gönder. Google'ın sonuçlara eklemesi zaman alabilir. `robots.txt` ve sitemap bu alan adını kanonik adres olarak kullanır.
 

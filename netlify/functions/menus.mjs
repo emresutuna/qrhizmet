@@ -40,12 +40,13 @@ export default async (request, context) => {
       const user = await getUser();
       if (!user) return json({ error: "Hesabına giriş yap." }, 401);
       const owned = await accountMenu(menus, user.id);
-      return json(owned ? { id: owned.id, data: { ...owned.record.data, menuId: owned.id }, adminPhone: owned.record.adminPhone || "", updatedAt: owned.record.updatedAt } : { menu: null });
+      return json(owned ? { id: owned.id, data: { ...owned.record.data, menuId: owned.id }, adminPhone: owned.record.adminPhone || "", updatedAt: owned.record.updatedAt, status: owned.record.status || "approved", adminNote: owned.record.adminNote || "" } : { menu: null });
     }
     if (request.method === "GET") {
       if (!id || !/^[a-f0-9]{18}$/.test(id)) return json({ error: "Menü bulunamadı." }, 404);
       const entry = await menus.get(`menus/${id}`, { type: "json" });
       if (!entry?.data) return json({ error: "Menü bulunamadı." }, 404);
+      if (entry.status && entry.status !== "approved") return json({ error: entry.status === "changes_requested" ? "Bu QR menüsü düzenleme bekliyor." : "Bu QR menüsü yönetici onayı bekliyor.", status: entry.status }, 403);
       const language = url.searchParams.get("lang");
       return json({ id, data: { ...entry.data, menuId: id }, languages: Object.keys(entry.translations || {}), translation: language ? (entry.translations || {})[language] || null : null });
     }
@@ -63,8 +64,8 @@ export default async (request, context) => {
       const current = await accountMenu(menus, user.id);
       if (current) {
         const updatedAt = new Date().toISOString();
-        await menus.setJSON(`menus/${current.id}`, { ...current.record, data: { ...data, menuId: current.id }, adminPhone: normalizePhone(body?.adminPhone), updatedAt });
-        return json({ id: current.id, updatedAt, existing: true });
+        await menus.setJSON(`menus/${current.id}`, { ...current.record, accountEmail: user.email || current.record.accountEmail || "", createdAt: current.record.createdAt || updatedAt, data: { ...data, menuId: current.id }, adminPhone: normalizePhone(body?.adminPhone), status: "pending", adminNote: "", submittedAt: updatedAt, updatedAt });
+        return json({ id: current.id, updatedAt, existing: true, status: "pending" });
       }
       const clientIp = context.ip || "unknown";
       const rateLimits = getStore({ name: "masaqr-create-limits", region: "eu-central-1" });
@@ -73,8 +74,9 @@ export default async (request, context) => {
       if (count >= 8) return json({ error: "Çok sık menü oluşturuldu. Birkaç dakika sonra tekrar dene." }, 429);
       await rateLimits.setJSON(rateKey, { window: currentWindow, count: count + 1 });
       const menuId = randomBytes(9).toString("hex"), ownerToken = randomBytes(32).toString("base64url");
-      await menus.setJSON(`menus/${menuId}`, { accountId: user.id, data: { ...data, menuId }, ownerHash: hash(ownerToken), adminPhone: normalizePhone(body?.adminPhone), translations: {}, updatedAt: new Date().toISOString() });
-      return json({ id: menuId, ownerToken }, 201);
+      const updatedAt = new Date().toISOString();
+      await menus.setJSON(`menus/${menuId}`, { accountId: user.id, accountEmail: user.email || "", createdAt: updatedAt, data: { ...data, menuId }, ownerHash: hash(ownerToken), adminPhone: normalizePhone(body?.adminPhone), translations: {}, status: "pending", adminNote: "", submittedAt: updatedAt, updatedAt });
+      return json({ id: menuId, ownerToken, status: "pending" }, 201);
     }
 
     if (!id || !/^[a-f0-9]{18}$/.test(id)) return json({ error: "Menü adresi geçersiz." }, 400);
@@ -83,8 +85,8 @@ export default async (request, context) => {
     if (existing.accountId && existing.accountId !== user.id) return json({ error: "Bu menüyü düzenleme yetkin yok." }, 403);
     if (!existing.accountId && !legacyAuthorized(existing, body?.ownerToken)) return json({ error: "Bu eski menüyü hesabına bağlamak için önceki tarayıcıda kayıtlı yetki anahtarı gerekiyor." }, 403);
     const updatedAt = new Date().toISOString();
-    await menus.setJSON(`menus/${id}`, { ...existing, accountId: user.id, data: { ...data, menuId: id }, adminPhone: normalizePhone(body?.adminPhone ?? existing.adminPhone), updatedAt });
-    return json({ id, updatedAt });
+    await menus.setJSON(`menus/${id}`, { ...existing, accountId: user.id, accountEmail: user.email || existing.accountEmail || "", createdAt: existing.createdAt || updatedAt, data: { ...data, menuId: id }, adminPhone: normalizePhone(body?.adminPhone ?? existing.adminPhone), status: "pending", adminNote: "", submittedAt: updatedAt, updatedAt });
+    return json({ id, updatedAt, status: "pending" });
   } catch (error) {
     console.error("Menu function error", error);
     return json({ error: "Menü kaydedilemedi. Biraz sonra tekrar dene." }, 500);

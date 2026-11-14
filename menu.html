@@ -36,16 +36,19 @@
       es:{welcome:'BIENVENIDO',title:'Descubre nuestro menú',copy:'Elige una categoría para empezar.',choose:'Elige una categoría',all:'Todo',recommend:'Recomiéndame algo',recommendCopy:'Elige lo que te apetece y encontraremos una opción.',menu:'Nuestro menú',search:'Buscar…',empty:'No hay productos en esta categoría.',close:'Cerrar',back:'Volver al menú',chooseKind:'¿Qué te apetece?',meal:'Comida',sweet:'Postre',drink:'Bebida',suggest:'Recomendar',noSuggestion:'Aún no hay productos de esta categoría. Encontramos una opción parecida.',language:'Idioma del menú'}
     };
     const languageLabels = { tr:'Türkçe', en:'English', de:'Deutsch', ar:'العربية', ru:'Русский', fr:'Français', es:'Español' };
-    let state, baseState, availableLanguages=['tr'], language='tr', category='all', recommendationKind='meal', campaignIndex=0, campaignTimer;
+    let state, baseState, availableLanguages=['tr'], language='tr', category='all', recommendationKind='meal', campaignIndex=0, campaignTimer, loadError='';
     try { state=JSON.parse(localStorage.getItem(KEY)); } catch {}
     const params = new URLSearchParams(location.search);
     const menuId = params.get('menu');
     if(menuId){const canonical=new URL('menu.html',location.origin);canonical.searchParams.set('menu',menuId);document.querySelector('link[rel=canonical]').href=canonical.href;}
     if (menuId) {
+      state=null;
       try {
-        const response=await fetch('/.netlify/functions/menus?id='+encodeURIComponent(menuId));
-        if(response.ok){const result=await response.json();state=result.data;availableLanguages=['tr',...(result.languages||[])];}
-      } catch {}
+        const response=await fetch('/.netlify/functions/menus?id='+encodeURIComponent(menuId),{cache:'no-store'});
+        const result=await response.json().catch(()=>({}));
+        if(response.ok){state=result.data;availableLanguages=['tr',...(result.languages||[])];}
+        else loadError=result.error||'Menü şu anda yayında değil.';
+      } catch { loadError='Menüye ulaşılamadı. İnternet bağlantını kontrol edip tekrar dene.'; }
     }
     const requestedLanguage=params.get('lang');
     const browserLanguage=(navigator.language||'tr').split('-')[0].toLowerCase();
@@ -55,7 +58,7 @@
       try{const response=await fetch('/.netlify/functions/menus?id='+encodeURIComponent(menuId)+'&lang='+encodeURIComponent(language));if(response.ok)activeTranslation=(await response.json()).translation;}catch{}
     }
     if(!state||!state.brand||!Array.isArray(state.products)||!state.products.length||!menuId||state.menuId!==menuId){
-      document.title='Menü açılamadı — QRHizmeti';$('brand-name').textContent='Menü bulunamadı';$('brand-intro').textContent='Bu menü bağlantısı bulunamadı. QR adresini kontrol edip işletmeyle iletişime geçin.';$('welcome-categories').remove();$('campaign-wrap').remove();$('category-list').remove();$('recommend-button').remove();$('products').innerHTML='<p class="rounded-2xl bg-white p-5 text-sm leading-6 text-muted">Menü bulunamadı veya henüz yayımlanmamış. QR adresini kontrol edip işletmeyle iletişime geçin.</p>';return;
+      document.title='Menü açılamadı — QRHizmeti';$('brand-name').textContent='Menü şu anda aktif değil';$('brand-intro').textContent='Menü onaylandığında bu bağlantıdan açılabilecek.';$('welcome-categories').remove();$('campaign-wrap').remove();$('category-list').remove();$('recommend-button').remove();const notice=document.createElement('p');notice.className='rounded-2xl bg-white p-5 text-sm leading-6 text-muted';notice.textContent=loadError||'Bu menü bağlantısı bulunamadı. QR adresini kontrol edip işletmeyle iletişime geçin.';$('products').replaceChildren(notice);return;
     }
     baseState=structuredClone(state);
     function translatedState(source,translation){
