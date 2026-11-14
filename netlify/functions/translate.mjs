@@ -2,7 +2,7 @@ import { createHash, timingSafeEqual } from "node:crypto";
 import { getStore } from "@netlify/blobs";
 import { getUser } from "@netlify/identity";
 
-const languages = new Set(["en", "de", "ar", "ru", "fr", "es"]);
+const languages = new Set(["en", "de", "ar", "fr"]);
 const hash = (value) => createHash("sha256").update(value).digest("hex");
 const reply = (body, status = 200) => Response.json(body, { status, headers: { "Cache-Control": "no-store" } });
 
