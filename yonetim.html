@@ -22,7 +22,7 @@
   </style>
 </head>
 <body class="min-h-screen bg-[#EEF3F0] text-ink antialiased">
-  <header class="sticky top-0 z-40 border-b border-white/10 bg-ink text-white"><div class="mx-auto flex h-[68px] max-w-[1500px] items-center justify-between px-4 sm:px-6"><a href="index.html" class="flex items-center gap-2.5"><span class="grid h-9 w-9 place-items-center rounded-xl bg-teal text-xs font-black text-ink">QR</span><span class="font-extrabold">QR<span class="text-teal">Hizmeti</span></span></a><div class="flex items-center gap-3"><span id="save-status" class="hidden text-[10px] font-semibold text-white/60 sm:block">Değişiklikler otomatik kaydedilir</span><span id="account-email" class="hidden max-w-40 truncate text-[10px] font-semibold text-white/65 sm:block"></span><button id="logout" class="rounded-full border border-white/15 px-3 py-2 text-[10px] font-bold text-white/70 hover:bg-white/5">Çıkış</button><button id="reset-menu" class="rounded-full border border-white/15 px-3 py-2 text-[10px] font-bold text-white/70 hover:bg-white/5">Menüyü sıfırla</button><a href="index.html" class="rounded-full bg-teal px-4 py-2 text-[10px] font-extrabold text-ink">Siteye dön ↗</a></div></div></header>
+  <header class="sticky top-0 z-40 border-b border-white/10 bg-ink text-white"><div class="mx-auto flex h-[68px] max-w-[1500px] items-center justify-between px-4 sm:px-6"><a href="index.html" class="flex items-center gap-2.5"><span class="grid h-9 w-9 place-items-center rounded-xl bg-teal text-xs font-black text-ink">QR</span><span class="font-extrabold">QR<span class="text-teal">Hizmeti</span></span></a><div class="flex items-center gap-3"><span id="save-status" class="hidden text-[10px] font-semibold text-white/60 sm:block" aria-live="polite">Değişiklikler otomatik kaydedilir</span><button id="reload-account-menu" class="rounded-full border border-teal/40 px-3 py-2 text-[10px] font-bold text-teal hover:bg-teal/10">Menüyü yenile</button><span id="account-email" class="hidden max-w-40 truncate text-[10px] font-semibold text-white/65 sm:block"></span><button id="logout" class="rounded-full border border-white/15 px-3 py-2 text-[10px] font-bold text-white/70 hover:bg-white/5">Çıkış</button><button id="reset-menu" class="rounded-full border border-white/15 px-3 py-2 text-[10px] font-bold text-white/70 hover:bg-white/5">Menüyü sıfırla</button><a href="index.html" class="rounded-full bg-teal px-4 py-2 text-[10px] font-extrabold text-ink">Siteye dön ↗</a></div></div></header>
   <main class="mx-auto max-w-[1500px] px-4 py-7 sm:px-6 lg:py-10"><div class="mb-7 flex flex-col justify-between gap-4 sm:flex-row sm:items-end"><div><p class="text-[10px] font-extrabold uppercase tracking-[.18em] text-teal-800">İŞLETME YÖNETİMİ</p><h1 class="mt-2 text-3xl font-extrabold tracking-tight sm:text-4xl">QR sayfanı oluştur.</h1><p class="mt-2 max-w-2xl text-sm leading-6 text-muted">Markanı ve katalog bilgilerini gir. Yaptığın değişiklikleri telefon önizlemesinde anında gör.</p></div><button id="export-menu" class="w-fit rounded-full border border-ink/10 bg-white px-4 py-2.5 text-xs font-extrabold hover:border-teal">QR sayfanı dışa aktar ↓</button></div>
     <div class="grid items-start gap-6 xl:grid-cols-[minmax(0,1fr)_390px]">
       <div class="space-y-5">
@@ -60,8 +60,29 @@
     const $=id=>document.getElementById(id);
     $('account-email').textContent=identityUser.email||'İşletme hesabı';
     $('logout').addEventListener('click',async()=>{await logout();location.replace('hesap.html');});
+    $('reload-account-menu').addEventListener('click',()=>loadAccountMenu({manual:true}));
     function loadState(){try{const saved=JSON.parse(localStorage.getItem(STORAGE_KEY));if(saved&&saved.brand&&Array.isArray(saved.categories)&&Array.isArray(saved.products))return {...defaultState,...saved,brand:{...defaultState.brand,...saved.brand,type:saved.brand.type||'restaurant'},campaigns:Array.isArray(saved.campaigns)?saved.campaigns:[],menuId:saved.menuId||'',whatsappAdminPhone:saved.whatsappAdminPhone||''};}catch{}return structuredClone(defaultState)}
-    try{const response=await fetch('/.netlify/functions/menus?mine=1',{headers:await authHeaders({})});if(response.ok){const mine=await response.json();if(mine.id&&mine.data){const local=state;state={...structuredClone(defaultState),...mine.data,menuId:mine.id,ownerToken:local.menuId===mine.id?local.ownerToken:'',whatsappAdminPhone:mine.adminPhone||''};localStorage.setItem(STORAGE_KEY,JSON.stringify(state));}}}catch{}
+    async function loadAccountMenu({manual=false}={}){
+      const button=$('reload-account-menu');
+      if(manual&&state.menuId&&state.products.length&&!confirm('Hesabındaki son kayıtlı menüyü yükleyip bu ekrandaki düzenlemelerin yerine koyayım mı?'))return;
+      if(button)button.disabled=true;
+      if(manual)$('save-status').textContent='Hesap menüsü yükleniyor…';
+      try{
+        const response=await fetch('/.netlify/functions/menus?mine=1&refresh='+Date.now(),{cache:'no-store',credentials:'same-origin',headers:{'Cache-Control':'no-cache',...(await authHeaders({}))}});
+        const mine=await response.json().catch(()=>({}));
+        if(!response.ok)throw new Error(mine.error||'Menü hesabından alınamadı. Girişini yenileyip tekrar dene.');
+        if(!mine.id||!mine.data){$('save-status').textContent='Hesabında yayınlı menü bulunamadı · bu cihazdaki taslak korundu.';$('save-status').classList.remove('text-red-300');return false;}
+        if(!Array.isArray(mine.data.products)||!Array.isArray(mine.data.categories)||!mine.data.brand)throw new Error('Hesap menüsü eksik veri döndürdü; mevcut taslağın korundu.');
+        const local=state;
+        state={...structuredClone(defaultState),...mine.data,brand:{...defaultState.brand,...mine.data.brand},categories:mine.data.categories,products:mine.data.products,campaigns:Array.isArray(mine.data.campaigns)?mine.data.campaigns:[],menuId:mine.id,ownerToken:local.menuId===mine.id?local.ownerToken:'',whatsappAdminPhone:mine.adminPhone||mine.data.whatsappAdminPhone||''};
+        try{localStorage.setItem(STORAGE_KEY,JSON.stringify(state));}catch{ /* Remote data remains available in memory if browser storage is full. */ }
+        if(manual)renderAll();
+        $('save-status').textContent='Hesaptan yüklendi · '+state.products.length+' ürün';$('save-status').classList.remove('text-red-300');
+        return true;
+      }catch(error){$('save-status').textContent=(state.products.length?'Cihazdaki taslak gösteriliyor · ':'')+(error.message||'Hesap menüsü yüklenemedi.');$('save-status').classList.add('text-red-300');return false;}
+      finally{if(button)button.disabled=false;}
+    }
+    await loadAccountMenu();
     function publicMenuData(){const {ownerToken,whatsappAdminPhone,...data}=state;return data;}
     function scheduleCloudSave(){if(!state.menuId)return;cloudRevision++;clearTimeout(cloudSaveTimer);cloudSaveTimer=setTimeout(flushCloudSave,700);}
     async function flushCloudSave(){if(cloudSaving||!state.menuId)return;cloudSaving=true;try{while(cloudSavedRevision<cloudRevision){const revision=cloudRevision;const response=await fetch('/.netlify/functions/menus?id='+encodeURIComponent(state.menuId),{method:'PUT',headers:await authHeaders({'Content-Type':'application/json'}),body:JSON.stringify({ownerToken:state.ownerToken,adminPhone:state.whatsappAdminPhone,data:publicMenuData()})});const result=await response.json().catch(()=>({}));if(!response.ok)throw new Error(result.error||'Çevrimiçi kayıt yapılamadı.');cloudSavedRevision=revision;$('save-status').textContent='Çevrimiçi kaydedildi';$('save-status').classList.remove('text-red-300');}}catch(error){$('save-status').textContent=error.message||'Çevrimiçi kayıt hatası';$('save-status').classList.add('text-red-300');cloudSavedRevision=cloudRevision;}finally{cloudSaving=false;if(cloudSavedRevision<cloudRevision)cloudSaveTimer=setTimeout(flushCloudSave,100);}}
