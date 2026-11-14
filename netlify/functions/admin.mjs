@@ -11,12 +11,12 @@ async function requireAdmin() {
   return user && adminEmails.has(String(user.email || "").toLowerCase()) ? user : null;
 }
 
-function menuSummary(id, record) {
+function menuSummary(id, record, fallbackEmail = "") {
   const data = record?.data || {};
   return {
     id,
     accountId: record?.accountId || "",
-    email: record?.accountEmail || "",
+    email: record?.accountEmail || fallbackEmail,
     phone: record?.adminPhone || "",
     name: data.brand?.name || "İsimsiz işletme",
     type: data.brand?.type || "restaurant",
@@ -43,7 +43,7 @@ export default async (request) => {
       const record = await menus.get(`menus/${id}`, { type: "json" });
       if (!record?.data) return json({ error: "Menü bulunamadı." }, 404);
       const { ownerHash, ...safeRecord } = record;
-      return json({ menu: menuSummary(id, record), record: safeRecord });
+      return json({ menu: menuSummary(id, record, record.accountId === admin.id ? admin.email || "" : ""), record: safeRecord });
     }
 
     if (request.method === "GET") {
